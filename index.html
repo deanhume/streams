@@ -7,14 +7,59 @@
 </head>
 
 <body>
-<div id="target"></div>
+    <div id="target"></div>
     <script>
         const targetDiv = document.querySelector('#target');
 
+        function splitStream(splitOn) {
+            let buffer = '';
+
+            return new TransformStream({
+                transform(chunk, controller) {
+                    buffer += chunk;
+                    const parts = buffer.split(splitOn);
+                    parts.slice(0, -1).forEach(part => controller.enqueue(part));
+                    buffer = parts[parts.length - 1];
+                },
+                flush(controller) {
+                    if (buffer) controller.enqueue(buffer);
+                }
+            });
+        }
+
+        function parseJSON() {
+            return new TransformStream({
+                transform(chunk, controller) {
+                    controller.enqueue(JSON.parse(chunk));
+                }
+            });
+        }
+
+        function appendChildWritableStream(parentNode) {
+            return new WritableStream({
+                write(chunk) {
+                    parentNode.appendChild(chunk);
+                }
+            });
+        }
+
         async function fetchDirectlyIntoDOM() {
-            const response = await fetch('http://localhost:3000/',
+
+            const jsonToElementTransform = new TransformStream({
+                transform(chunk, controller) {
+                    const tr = document.createElement('tr');
+                    for (const cell of FIELDS_LOWERCASE) {
+                        const td = document.createElement('td');
+                        td.textContent = chunk[cell];
+                        tr.appendChild(td);
+                    }
+                    controller.enqueue(tr);
+                }
+            });
+
+            const response = await fetch('http://localhost:3000/request',
                 {
-                    mode: 'same-origin',
+                    //mode: 'same-origin',
                     headers: {
                         'Cache-Control': 'no-cache, no-store'
                     }
@@ -22,8 +67,31 @@
 
             await response.body
                 .pipeThrough(new TextDecoderStream())
-                .pipeTo(targetDiv.writable);
+                // .pipeThrough(splitStream('\n'))
+                // .pipeThrough(parseJSON())
+                // .pipeThrough(jsonToElementTransform)
+                .pipeTo(appendChildWritableStream(targetDiv));
         }
+
+        async function fetchDirectlyIntoDOM2() {
+            const response = await fetch('http://localhost:3000/request');
+
+            const comments = response.body
+                // From bytes to text:
+                .pipeThrough(new TextDecoderStream())
+                // Buffer until newlines:
+                .pipeThrough(splitStream('\n'))
+                // Parse chunks as JSON:
+                .pipeThrough(parseJSON());
+
+            for await (const comment of comments) {
+                // Process each comment and add it to the page:
+                // (via whatever template or VDOM you're using)
+                console.log(comment);
+            }
+        }
+
+        fetchDirectlyIntoDOM2();
     </script>
 </body>
 
