@@ -4,7 +4,7 @@ const request = require('request');
 const port = 3000;
 
 app.get('/', function(req, res) {
-    const url = 'json-response.json';
+    const url = 'https://raw.githubusercontent.com/deanhume/streams/master/json-response.json';
 
     request.get(url).pipe(res);
 });
