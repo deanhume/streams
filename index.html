@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>title</title>
+</head>
+
+<body>
+<div id="target"></div>
+    <script>
+        const targetDiv = document.querySelector('#target');
+
+        async function fetchDirectlyIntoDOM() {
+            const response = await fetch('http://localhost:3000/',
+                {
+                    mode: 'same-origin',
+                    headers: {
+                        'Cache-Control': 'no-cache, no-store'
+                    }
+                });
+
+            await response.body
+                .pipeThrough(new TextDecoderStream())
+                .pipeTo(targetDiv.writable);
+        }
+    </script>
+</body>
+
+</html>
