@@ -4,11 +4,30 @@
 <head>
     <meta charset="UTF-8">
     <title>Streaming NDJSON result to the DOM</title>
+    <style>
+        .bar {
+            height: 8px;
+            margin-bottom: calc(var(--spacing) * 2);
+            border-radius: 10px;
+            overflow: hidden;
+            background: #eee;
+        }
+
+        .bar-fill {
+            width: 0;
+            height: 100%;
+            background: red;
+        }
+    </style>
 </head>
 
 <body>
+    <div class="bar">
+        <div class="bar-fill" id="bar-fill"></div>
+    </div>
     <!-- Target div to write results to -->
     <div id="target"></div>
     <script src="main.js"></script>
 </body>
+
 </html>

@@ -8,6 +8,10 @@ app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname+'/index.html'));
 });
 
+app.get('/main.js', function(req, res) {
+    res.sendFile(path.join(__dirname+'/main.js'));
+});
+
 app.get('/request', function(req, res) {
     const url = 'https://raw.githubusercontent.com/deanhume/streams/master/json-response.ndjson';
 
