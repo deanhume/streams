@@ -35,7 +35,7 @@
             });
         }
 
-        function test(reader){
+        function test(reader) {
             reader.read().then(
                 ({ value, done }) => {
                     if (done) {
@@ -56,13 +56,13 @@
 
             const comments = response.body
                 // // From bytes to text:
-                .pipeThrough(new TextDecoderStream());
-            // // Buffer until newlines:
-            // .pipeThrough(splitStream('\n'))
-            // // Parse chunks as JSON:
-            // .pipeThrough(parseJSON());
+                .pipeThrough(new TextDecoderStream())
+                // Buffer until newlines:
+                .pipeThrough(splitStream('\n'))
+                // Parse chunks as JSON:
+                .pipeThrough(parseJSON());
 
-            
+
             let reader = comments.getReader();
 
             test(reader);

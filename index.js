@@ -9,7 +9,7 @@ app.get('/', function(req, res) {
 });
 
 app.get('/request', function(req, res) {
-    const url = 'https://raw.githubusercontent.com/deanhume/streams/master/json-response.json';
+    const url = 'https://raw.githubusercontent.com/deanhume/streams/master/json-response.ndjson';
 
     request.get(url).pipe(res);
 });
