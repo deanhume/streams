@@ -13,7 +13,7 @@ app.get('/main.js', function(req, res) {
 });
 
 app.get('/request', function(req, res) {
-    const url = 'https://raw.githubusercontent.com/deanhume/streams/master/json-response.ndjson';
+    const url = 'https://raw.githubusercontent.com/deanhume/streams/master/json-response-small.ndjson';
 
     request.get(url).pipe(res);
 });
