@@ -47,8 +47,8 @@ function writeToDOM(reader) {
                 let result = document.createElement('div');
                 result.innerHTML = `<div>ID: ${value.id} - Phone: ${value.phone} - Result: ${value.result}</div><br>`;
 
-                // Append to the target
-                targetDiv.appendChild(result);
+                // Prepend to the target
+                targetDiv.insertBefore(result, targetDiv.firstChild);
 
                 // Recursively call
                 writeToDOM(reader);
